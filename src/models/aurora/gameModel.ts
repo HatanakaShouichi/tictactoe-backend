@@ -22,14 +22,21 @@ export class GameModel extends AuroraModel {
     /**
      * Gameの一覧を取得する
      */
-    async listGames(): Promise<GameEntity[]> {
+    async listGames({userId}: {
+        userId: string
+    }): Promise<GameEntity[]> {
         /**
-         * TO DO
          * Gameの一覧を取得する（対戦履歴を取得する）
          * first_user_idもしくは、second_user_idにuser_idが含まれているものだけとる
          */
         const ret: GameEntity[] = await this.list(`
-            ここにSQL文を書く
+            SELECT * 
+            FROM games 
+            WHERE 
+                first_user_id="${userId}"
+            OR
+                second_user_id="${userId}"
+            ;
         `)
         return ret
     }
@@ -37,13 +44,24 @@ export class GameModel extends AuroraModel {
     /**
      * Gameを作成する
      */
-    async createGame(): Promise<void> {
+    async createGame({gameId, firstUserId}: {
+        gameId: string;
+        firstUserId: string;
+    }): Promise<void> {
         /**
-         * TO　DO
          * Gameを作成する
          */
         await this.query(`
-            ここにSQL文を書く
+            INSERT INTO games (
+                id
+            ,   first_user_id
+            ,   created_at
+            )
+            VALUES (
+                "${gameId}"
+            ,   "${firstUserId}"
+            ,   NOW()
+            )
         `)
         return
     }
@@ -51,13 +69,17 @@ export class GameModel extends AuroraModel {
     /**
      * Gameの取得
      */
-    async getGame(): Promise<GameEntity>{
+    async getGame({gameId}: {
+        gameId: string;
+    }): Promise<GameEntity>{
         /**
-         * TO DO
          * Game情報を取得する
          */
         const ret: GameEntity = await this.get(`
-            ここにSQLをかく
+            SELECT * 
+            FROM games
+            WHERE  
+                id = "${gameId}"
         `)
         return ret
     }
@@ -65,13 +87,24 @@ export class GameModel extends AuroraModel {
     /**
      * Game情報の更新
      */
-    async updateGame(): Promise<void> {
+    async updateGame({gameId, secondUserId, winnerUserId}): Promise<void> {
         /**
-         * TO DO
          * Game情報を更新する
          */
+        // update用のvalue作成
+        const updateValueArray = []
+        if(secondUserId != null) updateValueArray.push(`second_user_id = "${secondUserId}"`);
+        if(winnerUserId != null) updateValueArray.push(`winner_user_id = "${winnerUserId}"`);
+
+        // operationの更新
         await this.query(`
-            ここにSQL文を書く
+            UPDATE
+                games
+            SET
+                ${this.generateUpdateValues(updateValueArray)}
+            WHERE
+                id = "${gameId}"
+            ;
         `)
         return
     }

@@ -18,48 +18,59 @@ export class GameDetailModel{
     /**
      * GameDetail情報を作成する
      */
-    async createGameDetail(): Promise<void> {
+    async createGameDetail({gameId}: {
+        gameId: string;
+    }): Promise<void> {
         /**
-         * TO DO
          * DynamoのGameDetail情報を作成する処理をかく
          */
-        await dynamo.put(
-            /**
-             * ここにdynamoのクエリをかく
-             */
-        ).promise()
+        await dynamo.put({
+            TableName: 'hatanaka-game-details',
+            Item: {
+                'id': gameId
+            }
+        }).promise()
         
     }
 
     /**
      * GameDetail情報を取得する
      */
-    async getGameDetail(): Promise<GameDetailEntity> {
+    async getGameDetail({gameId}: {
+        gameId: string;
+    }): Promise<GameDetailEntity> {
         /**
-         * TO DO
          * DynamoのGameDetail情報を取得する処理をかく
          */
-        const ret: GameDetailEntity = (await dynamo.get(
-            /**
-             * ここにdynamoのクエリをかく
-             */
-        ).promise())['Item'] 
+        const ret: GameDetailEntity = (await dynamo.get({
+            TableName: 'hatanaka-game-details',
+            Key:{
+                 id: gameId
+            }
+        }).promise())['Item'] 
         return ret
     }
 
     /**
      * GameDetail情報を更新する
      */
-    async updateGameDetail(): Promise<void>  {
+    async updateGameDetail({gameId, histories}: {
+        gameId: string;
+        histories: History[];
+    }): Promise<void>  {
         /**
-         * TO DO
          * DynamoのGameDetail情報を更新する処理をかく
          */
-        await dynamo.update(
-            /**
-             *　ここにDynamoのクエリをかく
-             */
-        ).promise()
+         await dynamo.update({
+            TableName: 'hatanaka-game-details',
+            Key:{
+                "id": gameId
+            },
+            UpdateExpression: "set histories = :histories",
+            ExpressionAttributeValues:{
+                ":histories": histories
+            }
+        }).promise()
         return
     }
 }

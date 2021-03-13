@@ -20,13 +20,23 @@ export class UserModel extends AuroraModel {
     /**
      * Userを作成する
      */
-    async createUser(): Promise<void> {
+    async createUser({userId, name, pass}): Promise<void> {
         /**
-         * TO　DO
-         * Gameを作成する
+         * Userを作成する
          */
         await this.query(`
-            ここにSQL文を書く
+            INSERT INTO users (
+                id
+            ,   name
+            ,   pass
+            ,   deleted
+            )
+            VALUES (
+                "${userId}"
+            ,   "${name}"
+            ,   "${pass}"
+            ,   0
+            )
         `)
         return
     }
@@ -34,13 +44,19 @@ export class UserModel extends AuroraModel {
     /**
      * Userの取得
      */
-    async getUser(): Promise<UserEntity>{
+    async getUser({userId}: {
+        userId: string;
+    }): Promise<UserEntity>{
         /**
-         * TO DO
          * User情報を取得する
          */
         const ret: UserEntity = await this.get(`
-            ここにSQLをかく
+            SELECT * 
+            FROM users
+            WHERE 
+                id = "${userId}"
+            AND
+                deleted = 0
         `)
         return ret
     }
@@ -48,14 +64,20 @@ export class UserModel extends AuroraModel {
     /**
      * User情報の削除(論理削除)
      */
-     async deleteUser(): Promise<void> {
+     async deleteUser({userId}: {
+         userId: string;
+     }): Promise<void> {
         /**
-         * TO DO
          * User情報を削除する
          */
         await this.query(`
-            ここにSQL文を書く
-            DELETEは使わずに、deletedに1を入れることで、削除されたこととみなす
+            UPDATE
+                users
+            SET
+                deleted = 1
+            WHERE
+                id = "${userId}"
+            ;
         `)
     }
 }

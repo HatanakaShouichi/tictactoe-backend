@@ -26,16 +26,14 @@ export class UserService {
         /**
          * Userを作成するmodelにデータをわたす
          */
-        await userModel.createUser(
-            /** 
-             * 引数で渡す
-            */
-        )
-        const user: UserEntity = await userModel.getUser(
-            /**
-             * 引数で渡す
-             */
-        )
+        await userModel.createUser({
+            userId: data.id,
+            name: data.name,
+            pass: data.pass
+        })
+        const user: UserEntity = await userModel.getUser({
+            userId: data.id
+        })
 
         // DBにもらった値を形成し直して返却
         const ret: UserResponse = {
@@ -51,11 +49,10 @@ export class UserService {
     static async getUser(
         data: GetUserInput
     ): Promise<UserResponse> {
-        const user: UserEntity = await userModel.getUser(
-            /**
-             * 引数で渡す
-             */
-        )
+        const user: UserEntity = await userModel.getUser({
+            userId: data.id
+        })
+        if (data.pass !== user.pass) return;
 
         /**
          * passが一致しているかどうか確かめる
@@ -76,11 +73,9 @@ export class UserService {
     static async deleteUser(
         data: DeleteUserInput
     ): Promise<General> {
-        await userModel.deleteUser(
-            /**
-             * 引数で渡す
-             */
-        )
+        await userModel.deleteUser({
+            userId: data.id
+        })
         // エラーが出なければ削除できたということを伝える
         return {result: "ok"} as General
     };

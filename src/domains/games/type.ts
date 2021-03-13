@@ -17,6 +17,7 @@ export interface History {
 export interface ListGameInput {
     user_id: string;
 }
+
 export interface CreateGameInput {
     first_user_id: string;
 }
