@@ -17,6 +17,7 @@ export interface History {
 export interface ListGameInput {
     user_id: string;
 }
+
 export interface CreateGameInput {
     first_user_id: string;
 }
@@ -29,7 +30,7 @@ export interface UpdateGameInput {
     id: string;
     second_user_id?: string;
     winner_user_id?: string;
-    histories: string;
+    histories: History[];
     created_at: string;
 }
 
@@ -37,6 +38,7 @@ export interface UpdateGameInput {
  * Clinic Response
  */
 export interface GameListResponse {
+    count: number;
     win_count: number;
     lose_count: number;
     items: GameResponse[];

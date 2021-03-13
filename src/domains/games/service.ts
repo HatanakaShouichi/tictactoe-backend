@@ -26,29 +26,27 @@ export class GameService {
      static async listGame(
         data: ListGameInput
     ): Promise<GameListResponse> {
-        const games = await gameModel.listGames(
-            /**
-             * 引数で渡す
-             * userが含まれているものだけとってくる
-             */
-        )
+        const games: GameEntity[] = await gameModel.listGames({
+            userId: data.user_id
+        })
         const items = await Promise.all(games.map(async(game) => {
-            const gameDetail = await gameDetailModel.getGameDetail(
-                /**
-                 * 引数で指定
-                 */
-            )
-            const item = {...game, histories: gameDetail.histories}
+            const gameDetail = await gameDetailModel.getGameDetail({
+                gameId: game.id
+            })
+            const histories = gameDetail.histories == null ? null : gameDetail.histories
+            const item = {...game, histories: histories}
             return item
         }))
 
+        const winGames = games.filter(game => game.winner_user_id === data.user_id);
+        const loseGames = games.filter(game => game.winner_user_id != null && game.winner_user_id !== data.user_id)
         /**
-         * TO DO
          * 勝利数などをカウント
          */
-        const winCount = 0
-        const loseCount = 0
+        const winCount = winGames.length
+        const loseCount = loseGames.length
         const ret: GameListResponse = {
+            count: items.length,
             win_count: winCount,
             lose_count: loseCount,
             items: items
@@ -68,16 +66,16 @@ export class GameService {
         /**
          * Userを作成するmodelにデータをわたす
          */
-        await gameModel.createGame(
-            /** 
-             * 引数で渡す
-            */
-        )
-        const game: GameEntity = await gameModel.getGame(
-            /**
-             * 引数で渡す
-             */
-        )
+        await gameModel.createGame({
+            gameId: gameId,
+            firstUserId: data.first_user_id
+        })
+        await gameDetailModel.createGameDetail({
+            gameId: gameId
+        })
+        const game: GameEntity = await gameModel.getGame({
+            gameId: gameId
+        })
 
         // DBにもらった値を形成し直して返却
         const ret: GameResponse= {
@@ -94,24 +92,20 @@ export class GameService {
     static async getGame(
         data: GetGameInput
     ): Promise<GameResponse> {
-        const game: GameEntity = await gameModel.getGame(
-            /**
-             * 引数で渡す
-             */
-        )
+        const game: GameEntity = await gameModel.getGame({
+            gameId: data.id
+        })
 
-        const gameDetail: GameDetailEntity = await gameDetailModel.getGameDetail(
-            /**
-             * 引数で渡す
-             */
-        )
+        const gameDetail: GameDetailEntity = await gameDetailModel.getGameDetail({
+            gameId: data.id
+        })
         // DBにもらった値を形成し直して返却
         const ret: GameResponse = {
             id: game.id,
             first_user_id: game.first_user_id,
             second_user_id: game.second_user_id,
             winner_user_id: game.winner_user_id,
-            histories: gameDetail.histories,
+            histories: gameDetail.histories ?? null,
             created_at: game.created_at
         }
         return ret
@@ -123,16 +117,15 @@ export class GameService {
     static async updateGame(
         data: UpdateGameInput
     ): Promise<GameResponse> {
-        await gameModel.updateGame(
-            /**
-             * 引数で渡す
-             */
-        )
-        await gameDetailModel.updateGameDetail(
-            /** 
-             * 引数で渡す
-            */
-        )
+        await gameModel.updateGame({
+            gameId: data.id,
+            secondUserId: data.second_user_id,
+            winnerUserId: data.winner_user_id
+        })
+        await gameDetailModel.updateGameDetail({
+            gameId: data.id,
+            histories: data.histories
+        })
         // update結果を再取得して返す
         return this.getGame({
             id: data.id
