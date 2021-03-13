@@ -1,0 +1,12 @@
+DependsOn: DBSubnetGroup
+Type: AWS::RDS::DBCluster
+Properties:
+  DatabaseName: MASTER
+  Engine: aurora-mysql
+  EngineVersion: "5.7"
+  MasterUsername: ${self:custom.otherfile.secret.${self:provider.stage}.username}
+  MasterUserPassword: ${self:custom.otherfile.secret.${self:provider.stage}.password}
+  DBClusterParameterGroupName: !Ref DBClusterParameterGroup
+  DBSubnetGroupName: !Ref DBSubnetGroup
+  VpcSecurityGroupIds:
+    - !Ref AuroraSecurityGroup

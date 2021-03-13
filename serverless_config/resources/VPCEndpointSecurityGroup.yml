@@ -1,0 +1,9 @@
+Type: AWS::EC2::SecurityGroup
+Properties:
+  VpcId: !Ref VPC
+  SecurityGroupIngress:
+    - CidrIp: 0.0.0.0/0
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+  GroupDescription: "Security-Group for VPC Endpoint"

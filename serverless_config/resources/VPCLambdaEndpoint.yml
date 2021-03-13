@@ -1,0 +1,11 @@
+Type: 'AWS::EC2::VPCEndpoint'
+Properties:
+  VpcEndpointType: Interface
+  PrivateDnsEnabled: true
+  SecurityGroupIds:
+    - !Ref VPCEndpointSecurityGroup
+  SubnetIds:
+    - !Ref SubnetA
+    - !Ref SubnetB
+  ServiceName: !Sub 'com.amazonaws.ap-northeast-1.lambda'
+  VpcId: !Ref VPC

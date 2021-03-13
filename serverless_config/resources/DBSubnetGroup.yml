@@ -1,0 +1,7 @@
+Type: AWS::RDS::DBSubnetGroup
+Properties:
+  DBSubnetGroupDescription: "DB subnet group"
+  DBSubnetGroupName: ${self:custom.defaultProfile}-db-subnet-group-${self:provider.stage}
+  SubnetIds:
+    - !Ref SubnetA
+    - !Ref SubnetB 

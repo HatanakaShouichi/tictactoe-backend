@@ -1,0 +1,7 @@
+Type: AWS::EC2::SecurityGroup
+Properties:
+  GroupDescription: SecurityGroup for Lambda Functions
+  VpcId: !Ref VPC
+  Tags:
+    - Key: "Name"
+      Value: ${self:custom.defaultProfile}-lambda-security-group-${self:provider.stage}

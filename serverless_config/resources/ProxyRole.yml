@@ -1,0 +1,34 @@
+DependsOn: AuroraSecret
+Type: AWS::IAM::Role
+Properties:
+  RoleName: ${self:custom.defaultProfile}-proxy-role-${self:provider.stage}
+  AssumeRolePolicyDocument:
+    Version: "2012-10-17"
+    Statement:
+      - Effect: Allow
+        Principal:
+          Service:
+            - "rds.amazonaws.com"
+        Action:
+          - "sts:AssumeRole"
+  Path: /
+  Policies:
+    - PolicyName: RdsProxyPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "secretsmanager:GetResourcePolicy"
+              - "secretsmanager:GetSecretValue"
+              - "secretsmanager:DescribeSecret"
+              - "secretsmanager:ListSecretVersionIds"
+            Resource:
+              - !Ref AuroraSecret
+          - Effect: Allow
+            Action:
+              - "kms:Decrypt"
+            Resource: "arn:aws:kms:${self:provider.region}:#{AWS::AccountId}:key/*"
+            Condition:
+              StringEquals:
+                kms:ViaService: "secretsmanager.${self:provider.region}.amazonaws.com"

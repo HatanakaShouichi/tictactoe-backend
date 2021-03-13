@@ -1,0 +1,13 @@
+DependsOn: AuroraSecret
+Type: AWS::RDS::DBProxy
+Properties:
+  DBProxyName: ${self:custom.defaultProfile}-educ-aurora-proxy-${self:provider.stage}
+  Auth:
+    - SecretArn: !Ref AuroraSecret
+  VpcSecurityGroupIds:
+    - !Ref AuroraSecurityGroup
+  VpcSubnetIds:
+    - !Ref SubnetA
+    - !Ref SubnetB
+  EngineFamily: MYSQL
+  RoleArn: !GetAtt ProxyRole.Arn

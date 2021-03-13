@@ -1,0 +1,13 @@
+dev:
+  Type: AWS::EC2::InternetGateway
+  Properties:
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-internet-gateway-${self:provider.stage}
+stg:
+  Type: AWS::EC2::InternetGateway
+  Properties:
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-internet-gateway-${self:provider.stage}
+prod:

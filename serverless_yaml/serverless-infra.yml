@@ -1,0 +1,103 @@
+service: ${self:custom.defaultProfile}-Infra-Stack
+
+plugins:
+  - serverless-layers
+  - serverless-plugin-split-stacks
+  - serverless-prune-plugin
+  - serverless-pseudo-parameters
+
+
+package:
+  exclude:
+    - .build/**
+    - conf/**
+    - scripts/**
+    - serverless_config/**
+    - function_yaml/**
+    - serverless_yaml/**
+    - serverless.yml
+    - tsconfig.json
+  include:
+    - .serverless/**
+    - webpack.config.js
+  package:
+    individually: true
+  excludeDevDependencies: true
+
+provider:
+  name: aws
+  region: ap-northeast-1
+  stage: ${opt:stage, self:custom.defaultStage}
+  profile: ${opt:profile, self:custom.defaultProfile}
+  runtime: nodejs12.x
+  stackName: ${self:custom.defaultProfile}-Infra-Stack-${self:provider.stage}
+  apiName: ${self:custom.defaultProfile}-InfraStack-${self:provider.stage}
+  logRetentionInDays: 30
+  versionFunctions: false
+  deploymentBucket:
+    name: educ-infra-stack-deployment-bucket-${self:provider.stage}
+  environment:
+    DB_PORT: 3306
+    env: ${self:provider.stage}
+    TZ: ${self:custom.otherfile.environment.${self:provider.stage}.TZ}
+    aws_access_key: ${self:custom.otherfile.secret.${self:provider.stage}.aws_access_key}
+    aws_secret_key: ${self:custom.otherfile.secret.${self:provider.stage}.aws_secret_key}
+    aws_region: ${self:custom.otherfile.environment.${self:provider.stage}.aws_region}
+    proxy_endpoint: ${self:custom.otherfile.secret.${self:provider.stage}.proxy_endpoint}
+    username: ${self:custom.otherfile.secret.${self:provider.stage}.username}
+    password: ${self:custom.otherfile.secret.${self:provider.stage}.password}
+iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - secretsmanager:GetSecretValue
+      - rds-data:*
+      - ec2:CreateNetworkInterface
+      - ec2:DescribeNetworkInterfaces
+      - ec2:DeleteNetworkInterface
+    Resource: "*"
+custom:
+  defaultStage: dev
+  # -> DynamoDBのテーブル名などの接頭辞になるためプロジェクト名をそのまま記載する
+  # -> defaultProfileの名前で各自の ~/.aws/credentials にAWS認証情報を設定してください
+  defaultProfile: educ
+  defaultLowerProfile: educ
+  defaultRegion: ap-northeast-1
+  otherfile:
+    environment:
+      dev: ${file(./conf/dev.yml)}
+    secret: 
+      dev: ${file(./conf/secret/.dev.yml)}
+  serverless-offline: ${file(./serverless_config/plugin/serverless-offline.yml)}
+  prune: ${file(./serverless_config/plugin/prune.yml)}
+  splitStacks:
+    perType: false
+
+resources:
+  Resources:
+    #
+    #　以下はRDS
+    #
+    AuroraSecurityGroup: ${file(./serverless_config/resources/AuroraSecurityGroup.yml):${self:provider.stage}}
+    AuroraSecret: ${file(./serverless_config/resources/AuroraSecret.yml)}
+    DBSubnetGroup: ${file(./serverless_config/resources/DBSubnetGroup.yml)}
+    DBCluster: ${file(./serverless_config/resources/DBCluster.yml)}
+    DBClusterParameterGroup: ${file(./serverless_config/resources/DBClusterParameterGroup.yml)}
+    DBInstance: ${file(./serverless_config/resources/DBInstance.yml):${self:provider.stage}}
+    DBProxyTargetGroup: ${file(./serverless_config/resources/DBProxyTargetGroup.yml)}
+    LambdaSecurityGroup: ${file(./serverless_config/resources/LambdaSecurityGroup.yml)}
+    ProxyRole: ${file(./serverless_config/resources/ProxyRole.yml)}
+    RDSProxy: ${file(./serverless_config/resources/RDSProxy.yml)}
+    SecretTargetAttachment: ${file(./serverless_config/resources/SecretTargetAttachment.yml)}
+    #
+    #　以下はVPC
+    #
+    VPC: ${file(./serverless_config/resources/VPC.yml):${self:provider.stage}}
+    SubnetA: ${file(./serverless_config/resources/SubnetA.yml):${self:provider.stage}}
+    SubnetB: ${file(./serverless_config/resources/SubnetB.yml):${self:provider.stage}}
+    VPCRouteTable: ${file(./serverless_config/resources/VPCRouteTable.yml)}
+    VPCSubnetARouteTableAssociation: ${file(./serverless_config/resources/VPCSubnetARouteTableAssociation.yml)}
+    VPCSubnetBRouteTableAssociation: ${file(./serverless_config/resources/VPCSubnetBRouteTableAssociation.yml)}
+    VPCDynamoEndPoint: ${file(./serverless_config/resources/VPCDynamoEndpoint.yml)}
+    InternetGateway: ${file(./serverless_config/resources/InternetGateway.yml):${self:provider.stage}}
+    PublicRoute: ${file(./serverless_config/resources/PublicRoute.yml):${self:provider.stage}}
+    VPCGatewayAttachment: ${file(./serverless_config/resources/VPCGatewayAttachment.yml):${self:provider.stage}}

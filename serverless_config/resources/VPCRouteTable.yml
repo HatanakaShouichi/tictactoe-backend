@@ -1,0 +1,6 @@
+Type: AWS::EC2::RouteTable
+Properties:
+  Tags:
+    - Key: "Name"
+      Value: ${self:custom.defaultProfile}-route-table-${self:provider.stage}
+  VpcId: !Ref VPC

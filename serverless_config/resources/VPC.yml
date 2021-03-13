@@ -1,0 +1,25 @@
+dev:
+  Type: AWS::EC2::VPC
+  Properties:
+    EnableDnsHostnames: true
+    EnableDnsSupport: true
+    CidrBlock: 10.0.10.0/24
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-vpc-${self:provider.stage}
+stg:
+  Type: AWS::EC2::VPC
+  Properties:
+    EnableDnsHostnames: true
+    EnableDnsSupport: true
+    CidrBlock: 10.0.20.0/24
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-vpc-${self:provider.stage}
+prod:
+  Type: AWS::EC2::VPC
+  Properties:
+    CidrBlock: 10.0.30.0/24
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-vpc-${self:provider.stage}

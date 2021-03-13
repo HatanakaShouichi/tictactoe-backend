@@ -1,0 +1,17 @@
+dev:
+  Type: AWS::EC2::Route
+  DependsOn: InternetGateway
+  Properties:
+    RouteTableId:
+      Ref: VPCRouteTable
+    DestinationCidrBlock: '0.0.0.0/0'
+    GatewayId: !Ref InternetGateway
+stg:
+  Type: AWS::EC2::Route
+  DependsOn: InternetGateway
+  Properties:
+    RouteTableId:
+      Ref: VPCRouteTable
+    DestinationCidrBlock: '0.0.0.0/0'
+    GatewayId: !Ref InternetGateway
+prod:

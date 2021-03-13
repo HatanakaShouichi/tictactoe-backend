@@ -1,0 +1,94 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+service: ${self:custom.defaultProfile}-LambdaStack
+
+plugins:
+  - serverless-layers
+  - serverless-prune-plugin
+  - serverless-pseudo-parameters
+  - serverless-webpack
+
+package:
+  exclude:
+    - .build/**
+    - conf/**
+    - scripts/**
+    - serverless_config/**
+    - function_yaml/**
+    - serverless_yaml/**
+    - serverless.yml
+    - tsconfig.json
+    - node_modules/**
+  include:
+    - .serverless/**
+    - webpack.config.js
+  package:
+    individually: true
+  excludeDevDependencies: true
+
+
+provider:
+  name: aws
+  region: ap-northeast-1
+  stage: ${opt:stage, self:custom.defaultStage}
+  profile: educ
+  runtime: nodejs12.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetSecretValue
+        - rds-data:*
+        - ec2:CreateNetworkInterface
+        - ec2:DescribeNetworkInterfaces
+        - ec2:DeleteNetworkInterface
+        - s3:*
+        - lambda:InvokeFunction
+      Resource: 
+        - "*"
+  stackName: ${self:custom.defaultProfile}-LambdaStack-${self:provider.stage}
+  apiName: ${self:custom.defaultProfile}-LambdaStack-${self:provider.stage}
+  timeout: 30
+  subnetA: ${self:custom.otherfile.secret.${self:provider.stage}.subnetA}
+  subnetB: ${self:custom.otherfile.secret.${self:provider.stage}.subnetB}
+  lambdaSecurityGroup: ${self:custom.otherfile.secret.${self:provider.stage}.lambdaSecurityGroup}
+  logRetentionInDays: 30
+  versionFunctions: false
+  deploymentBucket:
+    name: ${self:custom.defaultLowerProfile}-lambda-stack-deployment-bucket-${self:provider.stage}
+  environment:
+    DB_PORT: 3306
+    env: ${self:provider.stage}
+    TZ: ${self:custom.otherfile.environment.${self:provider.stage}.TZ}
+    aws_access_key: ${self:custom.otherfile.secret.${self:provider.stage}.aws_access_key}
+    aws_secret_key: ${self:custom.otherfile.secret.${self:provider.stage}.aws_secret_key}
+    aws_region: ${self:custom.otherfile.environment.${self:provider.stage}.aws_region}
+    proxy_endpoint: ${self:custom.otherfile.secret.${self:provider.stage}.proxy_endpoint}
+    username: ${self:custom.otherfile.secret.${self:provider.stage}.username}
+    password: ${self:custom.otherfile.secret.${self:provider.stage}.password}
+    dynamo_prefix: ${self:custom.otherfile.environment.${self:provider.stage}.name}
+    db_name: ${self:custom.otherfile.environment.${self:provider.stage}.name}
+custom:
+  defaultStage: dev
+  defaultProfile: educ-${self:custom.otherfile.environment.${self:provider.stage}.name}
+  defaultLowerProfile: educ-${self:custom.otherfile.environment.${self:provider.stage}.name}
+  defaultRegion: ap-northeast-1
+  otherfile:
+    environment:
+      dev: ${file(./conf/dev.yml)}
+    secret: 
+      dev: ${file(./conf/secret/.dev.yml)}
+  serverless-offline: ${file(./serverless_config/plugin/serverless-offline.yml)}
+  prune: ${file(./serverless_config/plugin/prune.yml)}
+
+functions:
+  - ${file(./serverless_config/functions/function.yml)}

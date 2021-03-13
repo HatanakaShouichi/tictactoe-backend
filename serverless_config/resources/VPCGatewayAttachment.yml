@@ -1,0 +1,13 @@
+dev:
+  Type: AWS::EC2::VPCGatewayAttachment
+  Properties:
+    InternetGatewayId:
+      Ref: InternetGateway
+    VpcId: !Ref VPC
+stg: 
+  Type: AWS::EC2::VPCGatewayAttachment
+  Properties:
+    InternetGatewayId:
+      Ref: InternetGateway
+    VpcId: !Ref VPC
+prod:

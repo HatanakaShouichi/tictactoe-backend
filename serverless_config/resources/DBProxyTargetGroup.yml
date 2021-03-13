@@ -1,0 +1,9 @@
+Type: AWS::RDS::DBProxyTargetGroup
+Properties:
+  ConnectionPoolConfigurationInfo:
+    MaxConnectionsPercent: 50
+  TargetGroupName: default
+  DBProxyName: !Ref RDSProxy
+  DBClusterIdentifiers:
+    - !Ref DBCluster
+DependsOn: RDSProxy

@@ -1,0 +1,11 @@
+# Setting by Environment(Serverless Framework Level)
+
+# AWS Settings
+
+# Timezone
+TZ: UTC
+
+# DynamoDBの設定
+stage: dev
+aws_region: ap-northeast-1
+name: hatanaka

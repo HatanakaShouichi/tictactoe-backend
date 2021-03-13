@@ -1,0 +1,42 @@
+dev:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupDescription: SecurityGroup for Aurora
+    VpcId: !Ref VPC
+    SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 3306
+        ToPort: 3306
+        CidrIp: 0.0.0.0/0
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-aurora-security-group-${self:provider.stage}
+  DependsOn: VPC
+stg:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupDescription: SecurityGroup for Aurora
+    VpcId: !Ref VPC
+    SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 3306
+        ToPort: 3306
+        CidrIp: 0.0.0.0/0
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-aurora-security-group-${self:provider.stage}
+  DependsOn: VPC
+prod:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupDescription: SecurityGroup for Aurora
+    VpcId: !Ref VPC
+    SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 3306
+        ToPort: 3306
+        CidrIp: 10.0.30.0/24
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-aurora-security-group-${self:provider.stage}
+  DependsOn: VPC

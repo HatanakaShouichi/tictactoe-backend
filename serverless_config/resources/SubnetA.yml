@@ -1,0 +1,29 @@
+dev:
+  Type: AWS::EC2::Subnet
+  Properties:
+    VpcId: !Ref VPC
+    CidrBlock: 10.0.10.0/25
+    AvailabilityZone: ap-northeast-1a
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-public-a-${self:provider.stage}
+
+stg:
+  Type: AWS::EC2::Subnet
+  Properties:
+    VpcId: !Ref VPC
+    CidrBlock: 10.0.20.0/25
+    AvailabilityZone: ap-northeast-1a
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-private-a-${self:provider.stage}
+
+prod:
+  Type: AWS::EC2::Subnet
+  Properties:
+    VpcId: !Ref VPC
+    CidrBlock: 10.0.30.0/25
+    AvailabilityZone: ap-northeast-1a
+    Tags:
+      - Key: "Name"
+        Value: ${self:custom.defaultProfile}-private-a-${self:provider.stage}

@@ -1,0 +1,7 @@
+Type: AWS::EC2::VPCEndpoint
+Properties: 
+  RouteTableIds: 
+    - !Ref VPCRouteTable
+  ServiceName: 'com.amazonaws.ap-northeast-1.dynamodb'
+  VpcEndpointType: Gateway
+  VpcId: !Ref VPC
