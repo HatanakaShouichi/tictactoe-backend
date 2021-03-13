@@ -29,7 +29,7 @@ export interface UpdateGameInput {
     id: string;
     second_user_id?: string;
     winner_user_id?: string;
-    histories: string;
+    histories: History[];
     created_at: string;
 }
 

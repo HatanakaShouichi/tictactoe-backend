@@ -33,8 +33,13 @@ export class UserInterface{
             event.pathParameters,
             "user_id"
         )
+        const pass: string = RequestUtils.getQueryParameter(
+            event.queryStringParameters,
+            "pass"
+        )
         const data: GetUserInput = {
-            id: userId
+            id: userId,
+            pass: pass
         }
         const ret = await UserService.getUser(data)
         return ret

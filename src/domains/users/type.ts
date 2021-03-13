@@ -11,6 +11,7 @@ export interface CreateUserInput {
 
 export interface GetUserInput {
     id: string;
+    pass: string;
 }
 
 export interface DeleteUserInput {
