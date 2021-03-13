@@ -31,7 +31,6 @@ package:
     - node_modules/**
   include:
     - .serverless/**
-    - package.json
     - webpack.config.js
   package:
     individually: true
