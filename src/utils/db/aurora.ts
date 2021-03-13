@@ -14,13 +14,13 @@ export class Aurora {
    * コネクションの初期化を行う
    * 各リクエストにつき一回のみ行う
    */ 
-  static async connect(clinicId) {
+  static async connect() {
     // コネクションの作成
     try{
       this.connection = await mysql2.createConnection({
         host: process.env['proxy_endpoint'],
         user: process.env['username'],
-        database: clinicId,
+        database: process.env.name,
         ssl: 'Amazon RDS',
         password: process.env['password'],
         multipleStatements: true

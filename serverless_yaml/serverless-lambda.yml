@@ -53,6 +53,7 @@ provider:
         - ec2:DeleteNetworkInterface
         - s3:*
         - lambda:InvokeFunction
+        - dynamodb:*
       Resource: 
         - "*"
   stackName: ${self:custom.defaultProfile}-LambdaStack-${self:provider.stage}
@@ -75,8 +76,7 @@ provider:
     proxy_endpoint: ${self:custom.otherfile.secret.${self:provider.stage}.proxy_endpoint}
     username: ${self:custom.otherfile.secret.${self:provider.stage}.username}
     password: ${self:custom.otherfile.secret.${self:provider.stage}.password}
-    dynamo_prefix: ${self:custom.otherfile.environment.${self:provider.stage}.name}
-    db_name: ${self:custom.otherfile.environment.${self:provider.stage}.name}
+    name: ${self:custom.otherfile.environment.${self:provider.stage}.name}
 custom:
   defaultStage: dev
   defaultProfile: educ-${self:custom.otherfile.environment.${self:provider.stage}.name}

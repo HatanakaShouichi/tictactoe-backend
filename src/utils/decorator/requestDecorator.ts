@@ -65,7 +65,7 @@ export const apigateway = () => {
         try {
           // Dynamoに接続
           await Dynamo.connect()
-          await Aurora.connect(process.env.name);
+          await Aurora.connect();
           // トランザクションを貼る
           await AuroraModel.beginTransaction();
           // 処理を行う
