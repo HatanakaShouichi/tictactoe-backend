@@ -46,11 +46,12 @@ export class GameService {
          * TO DO
          * 勝利数などをカウント
          */
-        const winCount = 0
-        const loseCount = 0
+        const winGames = games.filter(game => "ここを埋める")
+        const loseGames = games.filter(game => "ここを埋める")
         const ret: GameListResponse = {
-            win_count: winCount,
-            lose_count: loseCount,
+            count: items.length,
+            win_count: winGames.length,
+            lose_count: loseGames.length,
             items: items
         }
         return ret
@@ -69,6 +70,11 @@ export class GameService {
          * Userを作成するmodelにデータをわたす
          */
         await gameModel.createGame(
+            /** 
+             * 引数で渡す
+            */
+        )
+        await gameDetailModel.createGameDetail(
             /** 
              * 引数で渡す
             */
@@ -111,7 +117,7 @@ export class GameService {
             first_user_id: game.first_user_id,
             second_user_id: game.second_user_id,
             winner_user_id: game.winner_user_id,
-            histories: gameDetail.histories,
+            histories: gameDetail.histories ?? null,
             created_at: game.created_at
         }
         return ret

@@ -37,6 +37,7 @@ export interface UpdateGameInput {
  * Clinic Response
  */
 export interface GameListResponse {
+    count: number;
     win_count: number;
     lose_count: number;
     items: GameResponse[];

@@ -63,9 +63,14 @@ export class GameInterface{
      */
     @apigateway()
     static async updateGame(event) {
+        // パスパラメータの取得
+        const gameId: string = RequestUtils.getPathParameter(
+            event.pathParameters,
+            "game_id"
+        )
         // ボディの取得 
         const body: UpdateGameInput= RequestUtils.getBodyRequest(event.body)
-        const data = {...body}
+        const data = {...body, id: gameId}
         const ret = await GameService.updateGame(data)
         return ret
     }
