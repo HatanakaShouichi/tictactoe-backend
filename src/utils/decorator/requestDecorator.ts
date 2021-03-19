@@ -23,7 +23,7 @@ const ResponseJson = (ret: object, status: number): ApigatewayResponse => {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "OPTIONS,DELETE,PUT,POST,GET",
           "Access-Control-Allow-Headers": "Content-Type",
-          "Access-Control-Expose-Headers": "Content-Type, Authorization, clinic_id"
+          "Access-Control-Expose-Headers": "Content-Type, Authorization"
       },
       body: JSON.stringify(ret)
   };

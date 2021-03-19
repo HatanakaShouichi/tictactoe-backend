@@ -10,6 +10,8 @@ createUser:
   - http:
       path: users/
       method: POST
+      cors: 
+        origin: '*'
 getUser:
   handler: src/domains/handler.getUser
   vpc:
@@ -22,6 +24,8 @@ getUser:
   - http:
       path: users/{user_id}
       method: GET
+      cors: 
+        origin: '*'
 deleteUser:
   handler: src/domains/handler.deleteUser
   vpc:
@@ -34,6 +38,8 @@ deleteUser:
   - http:
       path: users/{user_id}
       method: Delete
+      cors: 
+        origin: '*'
 listGame:
   handler: src/domains/handler.listGame
   vpc:
@@ -46,6 +52,8 @@ listGame:
   - http:
       path: games
       method: GET
+      cors: 
+        origin: '*'
 createGame:
   handler: src/domains/handler.createGame
   vpc:
@@ -58,6 +66,8 @@ createGame:
   - http:
       path: games
       method: POST
+      cors: 
+        origin: '*'
 updateGame:
   handler: src/domains/handler.updateGame
   vpc:
@@ -70,6 +80,8 @@ updateGame:
   - http:
       path: games/{game_id}
       method: PUT
+      cors: 
+        origin: '*'
 getGame:
   handler: src/domains/handler.getGame
   vpc:
@@ -82,3 +94,5 @@ getGame:
   - http:
       path: games/{game_id}
       method: GET
+      cors: 
+        origin: '*'

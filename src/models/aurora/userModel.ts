@@ -20,7 +20,11 @@ export class UserModel extends AuroraModel {
     /**
      * Userを作成する
      */
-    async createUser({userId, name, pass}): Promise<void> {
+    async createUser({userId, name, pass}: {
+        userId: string;
+        name: string;
+        pass: string;
+    }): Promise<void> {
         /**
          * Userを作成する
          */

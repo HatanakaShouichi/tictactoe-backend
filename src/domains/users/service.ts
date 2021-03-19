@@ -57,7 +57,6 @@ export class UserService {
         /**
          * passが一致しているかどうか確かめる
          */
-        if("password不一致")　return;
         
         // DBにもらった値を形成し直して返却
         const ret: UserResponse = {

@@ -18,8 +18,9 @@ export class GameDetailModel{
     /**
      * GameDetail情報を作成する
      */
-    async createGameDetail({gameId}: {
+    async createGameDetail({gameId, histories}: {
         gameId: string;
+        histories: History[];
     }): Promise<void> {
         /**
          * DynamoのGameDetail情報を作成する処理をかく
@@ -27,7 +28,8 @@ export class GameDetailModel{
         await dynamo.put({
             TableName: 'hatanaka-game-details',
             Item: {
-                'id': gameId
+                'id': gameId,
+                'histories': histories
             }
         }).promise()
         
@@ -58,6 +60,7 @@ export class GameDetailModel{
         gameId: string;
         histories: History[];
     }): Promise<void>  {
+        console.log(histories)
         /**
          * DynamoのGameDetail情報を更新する処理をかく
          */

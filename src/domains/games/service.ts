@@ -71,7 +71,16 @@ export class GameService {
             firstUserId: data.first_user_id
         })
         await gameDetailModel.createGameDetail({
-            gameId: gameId
+            gameId: gameId,
+            histories: [
+                {
+                  squares: Array(9).fill(null),
+                  location: {
+                    col: null,
+                    row: null
+                  }
+                }
+              ]
         })
         const game: GameEntity = await gameModel.getGame({
             gameId: gameId
@@ -122,10 +131,13 @@ export class GameService {
             secondUserId: data.second_user_id,
             winnerUserId: data.winner_user_id
         })
-        await gameDetailModel.updateGameDetail({
-            gameId: data.id,
-            histories: data.histories
-        })
+        console.log(data)
+        if(data.histories != null) {
+            await gameDetailModel.updateGameDetail({
+                gameId: data.id,
+                histories: data.histories
+            })
+        }
         // update結果を再取得して返す
         return this.getGame({
             id: data.id

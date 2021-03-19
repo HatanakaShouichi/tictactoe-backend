@@ -95,7 +95,7 @@ export class GameModel extends AuroraModel {
         const updateValueArray = []
         if(secondUserId != null) updateValueArray.push(`second_user_id = "${secondUserId}"`);
         if(winnerUserId != null) updateValueArray.push(`winner_user_id = "${winnerUserId}"`);
-
+        if(secondUserId == null && winnerUserId == null) return;
         // operationの更新
         await this.query(`
             UPDATE
